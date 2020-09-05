@@ -81,8 +81,6 @@ export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop
 export SCALA_HOME=/home/spark/scala-2.12.11
 export PATH=$SCALA_HOME/bin:$PATH
 
-export ANACONDA_HOME=/home/spark/anaconda3
-export PATH=$ANACONDA_HOME/bin:$PATH
 export SPARK_MASTER_IP=10.120.26.200
 SPARK_DRIVER_MEMORY=1G
 
