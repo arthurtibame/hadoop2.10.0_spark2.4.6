@@ -20,7 +20,7 @@ get_script_dir () {
 PASSWORD=$(awk -F'[<>]' '/<password>/{print $3}' $(get_script_dir)/utils/configure.xml)
 CONFIGURE_PATH=$(get_script_dir)/conf
 BASE_PATH=/home/$USER
-JAVA_VERSION=1.8.0_261
+JAVA_VERSION=1.8.0_131
 SCALA_VERSION=2.12.11
 HADOOP_VERSION=2.10.0
 SPARK_VERSION=2.4.6
@@ -29,19 +29,24 @@ SPARK_PATH=$BASE_PATH/spark-$SPARK_VERSION-bin-hadoop2.7
 
 
 ##### start install 
-echo $PASSWORD | sudo -S apt-get update -y &&\
-echo $PASSWORD | sudo apt-get upgrade -y;
-
+echo $PASSWORD | sudo -S apt-get update -y && \
+echo $PASSWORD | sudo apt-get upgrade -y && \
+echo $PASSWORD | sudo 
+ 
 #DOWDLOAD packages
 wget http://apache.stu.edu.tw/hadoop/common/hadoop-$HADOOP_VERSION/hadoop-$HADOOP_VERSION.tar.gz
 wget http://apache.stu.edu.tw/spark/spark-$SPARK_VERSION/spark-$SPARK_VERSION-bin-hadoop2.7.tgz 
 wget https://downloads.lightbend.com/scala/$SCALA_VERSION/scala-$SCALA_VERSION.tgz
 
+wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz
+
+
+
 #EXTRACT FILES
 tar -zxvf $(get_script_dir)/hadoop-$HADOOP_VERSION.tar.gz
 tar -zxvf $(get_script_dir)/spark-$VERSION-bin-hadoop2.7.tgz 
 tar -zxvf $(get_script_dir)/scala-$SCALA_VERSION.tgz
-tar -zxvf $(get_script_dir)/jdk-8u261-linux-x64.tar.gz
+tar -zxvf $(get_script_dir)/jdk-8u131-linux-x64.tar.gz
 
 #REMOBE all file
 rm -rf *.t*
@@ -54,14 +59,14 @@ echo "COPY CONFIGURE COMPLETED"
 #move all dirs to BASE PATH
 mv $(get_script_dir)/spark-$SPARK_VERSION-bin-hadoop2.7/ $BASE_PATH/ && \
 mv $(get_script_dir)/hadoop-$HADOOP_VERSION/ $BASE_PATH/ && \
-mv $(get_script_dir)/jdk$JAVA_VERSION $BASE_APTH/ $BASE_PATH/ && \
+mv $(get_script_dir)/jdk$JAVA_VERSION $BASE_PATH/ && \
 mv $(get_script_dir)/scala-$SCALA_VERSION/ $BASE_PATH/ && \
 
 echo "MOVED ALL DIRS to /home/$USER"
 
 #ADD ENV to PATH
 echo "ADD JAVA_HOME"
-export JAVA_HOME=$BASE_PATH/jdf$JAVA_VERSION
+export JAVA_HOME=$BASE_PATH/jdk$JAVA_VERSION
 export PATH=$JAVA_HOME/bin:$PATH
 
 echo "ADD SCALA_HOME"
@@ -75,3 +80,18 @@ export PATH=$HADOOP_HOME/bin:$PATH
 echo "ADD SPARK_HOME"
 export SPARK_HOME=$BASE_PATH/spark-$SPARK_VERSION-bin-hadoop2.7
 export PATH=$SPARK_HOME/bin:$PATH
+
+
+export PYSPARK_PYTHON=python
+# use ipython as the interactive shell
+export PYSPARK_DRIVER_PYTHON=ipython
+export SPARK_KAFKA_VERSION=0.10
+export PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.7-src.zip:$PYTHONPATH
+# use jupyter as the interactive shell
+#export PYSPARK_DRIVER_PYTHON=jupyter
+#export PYSPARK_DRIVER_PYTHON_OPTS=notebook
+
+
+mkdir $BASE_PATH/hdfs 
+mkdir $BASE_PATH/hdfs/namenode    
+mkdir $BASE_PATH/hdfs/datanode 

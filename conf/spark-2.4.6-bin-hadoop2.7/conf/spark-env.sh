@@ -70,7 +70,7 @@
 
 
 
-export JAVA_HOME=/home/spark/jdk1.8.0_261
+export JAVA_HOME=/home/spark/jdk1.8.0_131
 export PATH=$JAVA_HOME/bin:$PATH
 
 export HADOOP_HOME=/home/spark/hadoop-2.10.0
